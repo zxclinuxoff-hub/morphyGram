@@ -298,3 +298,35 @@ body.app-body {
 .qr-img { width: 240px; max-width: 100%; border-radius: 14px; background: #fff; padding: 10px; box-sizing: border-box; }
 .qr-hint { color: #9a9aa3; font-size: 14px; text-align: center; line-height: 1.5; margin: 0 0 16px; }
 #step-qr { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+
+/* ===== Экран входа в стиле Telegram ===== */
+#login.hidden, .tg-modal.hidden, .tg-step.hidden { display: none !important; }
+.tg-auth { position: fixed; inset: 0; background: #000; color: #fff; display: flex; justify-content: center; overflow-y: auto; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif; padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px); box-sizing: border-box; }
+.tg-inner { width: 100%; max-width: 420px; padding: 56px 20px 24px; box-sizing: border-box; text-align: center; }
+.tg-emoji { font-size: 72px; line-height: 1; margin: 8px 0 18px; }
+.tg-title { font-size: 26px; font-weight: 600; margin: 0 0 10px; }
+.tg-sub { color: #8e8e93; font-size: 15px; line-height: 1.4; margin: 0 0 26px; }
+.tg-step { display: flex; flex-direction: column; gap: 14px; text-align: left; }
+.tg-row { background: #1c1c1e; border-radius: 12px; display: flex; align-items: center; padding: 0 14px; min-height: 50px; box-sizing: border-box; gap: 10px; }
+.tg-country { width: 100%; border: 0; color: #3390ec; font-size: 17px; cursor: pointer; text-align: left; font-family: inherit; }
+.tg-country-name { flex: 1; }
+.tg-chev { color: #8e8e93; font-size: 22px; }
+.tg-flag { font-size: 22px; }
+.tg-phone-row { gap: 12px; }
+.tg-dial { font-size: 17px; min-width: 56px; }
+.tg-input { flex: 1; min-width: 0; width: 100%; background: transparent; border: 0; outline: none; color: #fff; font-size: 17px; padding: 14px 0; font-family: inherit; }
+.tg-input::placeholder { color: #636366; }
+.tg-code { text-align: center; letter-spacing: .5em; font-size: 24px; }
+.tg-btn { height: 50px; border: 0; border-radius: 12px; background: #3390ec; color: #fff; font-size: 17px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.tg-btn:disabled { background: #2c2c2e; color: #8e8e93; cursor: default; }
+.tg-link { background: none; border: 0; color: #3390ec; font-size: 16px; cursor: pointer; padding: 8px; font-family: inherit; }
+.tg-status { color: #8e8e93; font-size: 14px; min-height: 18px; margin: 16px 0 0; }
+.tg-error { color: #ff453a; font-size: 14px; min-height: 18px; margin: 4px 0 0; }
+.tg-foot { color: #636366; font-size: 12px; line-height: 1.5; margin: 28px 0 0; }
+.tg-modal { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: flex-end; justify-content: center; z-index: 60; }
+.tg-sheet { background: #1c1c1e; width: 100%; max-width: 480px; border-radius: 16px 16px 0 0; padding: 14px; box-sizing: border-box; max-height: 80vh; display: flex; flex-direction: column; gap: 10px; }
+.tg-sheet-head { display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 17px; padding: 0 4px; }
+.tg-country-list { overflow-y: auto; display: flex; flex-direction: column; }
+.tg-country-item { display: flex; align-items: center; gap: 12px; background: none; border: 0; border-bottom: 1px solid #2c2c2e; color: #fff; padding: 12px 4px; font-size: 16px; cursor: pointer; text-align: left; font-family: inherit; }
+.tg-cname { flex: 1; }
+.tg-cdial { color: #8e8e93; }
