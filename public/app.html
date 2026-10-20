@@ -28,10 +28,19 @@
       <h1 class="auth-title">MORPHY<b>GRAM</b></h1>
       <p class="auth-sub">вход по номеру Telegram</p>
 
+      <div class="step hidden" id="step-qr">
+        <div class="qr-box"><img id="qr-img" class="qr-img" alt="QR-код для входа"></div>
+        <p class="qr-hint">Открой Telegram на телефоне: Настройки → Устройства → Подключить устройство. Наведи камеру на код или нажми кнопку ниже.</p>
+        <a id="qr-link" class="btn btn-primary wide" href="#">Открыть в Telegram</a>
+        <button id="btn-qr-retry" class="linklike">Обновить QR-код</button>
+        <button id="btn-to-phone" class="linklike">Войти по номеру телефона</button>
+      </div>
+
       <div class="step" id="step-phone">
         <label class="lbl" for="phone">Номер телефона</label>
         <input id="phone" class="inp" type="tel" autocomplete="tel" placeholder="+7 900 000-00-00">
         <button id="btn-phone" class="btn btn-primary wide">Получить код</button>
+        <button id="btn-to-qr" class="linklike">← войти по QR-коду</button>
       </div>
 
       <div class="step hidden" id="step-code">
