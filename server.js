@@ -317,13 +317,19 @@ io.on('connection', (socket) => {
       await client.connect();
       // Запрос кода: Telegram сам решает канал (приложение Telegram, SMS или звонок)
       const sent = await client.sendCode({ apiId: API_ID, apiHash: API_HASH }, clean);
-      if (!sent || !sent.phoneCodeHash || !sent.type) throw new Error('TELEGRAM_CODE_REQUEST_INCOMPLETE');
-      const t = sent.type && sent.type.className;
-      const via = (sent.isCodeViaApp || t === 'auth.SentCodeTypeApp') ? 'app'
-        : (t === 'auth.SentCodeTypeSms' ? 'sms' : 'other');
+      // GramJS versions return phoneCodeHash + delivery flags, not always a `type` field.
+      // Requiring `sent.type` falsely raised TELEGRAM_CODE_REQUEST_INCOMPLETE even when
+      // Telegram had successfully accepted the request.
+      if (!sent || !sent.phoneCodeHash) {
+        throw new Error('TELEGRAM_CODE_REQUEST_INCOMPLETE: Telegram response did not contain phoneCodeHash');
+      }
+      const via = sent.isCodeViaApp ? 'app'
+        : sent.isCodeViaSms ? 'sms'
+        : sent.isCodeViaCall || sent.isCodeViaFlashCall || sent.isCodeViaMissedCall ? 'call'
+        : 'other';
       pendingPhone = { client, phone: clean, hash: sent.phoneCodeHash };
-      console.info('[auth] Telegram accepted a code request; delivery type:', t || 'unknown');
-      socket.emit('auth:need_code', { via, type: t || 'unknown' });
+      console.info('[auth] Telegram accepted a code request; delivery type:', via);
+      socket.emit('auth:need_code', { via, type: via });
     } catch (e) {
       const raw = (e && (e.errorMessage || e.message)) || String(e);
       console.error('[auth] Code request failed:', raw);
