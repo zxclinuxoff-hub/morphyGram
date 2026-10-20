@@ -29,8 +29,12 @@ const { StringSession } = require('telegram/sessions');
 const QRCode = require('qrcode');
 
 const PORT = process.env.PORT || 3000;
-const API_ID = parseInt(process.env.API_ID || '38101489', 10);
-const API_HASH = process.env.API_HASH || 'bbebd5bef6dd4fe90189ba4b5dd5d8d9';
+const API_ID = Number.parseInt(process.env.API_ID || '', 10);
+const API_HASH = String(process.env.API_HASH || '').trim();
+if (!Number.isInteger(API_ID) || API_ID <= 0 || !/^[a-f0-9]{32}$/i.test(API_HASH)) {
+  console.error('[config] Missing/invalid API_ID or API_HASH. Set both in Render → Environment using credentials from https://my.telegram.org/apps.');
+  process.exit(1);
+}
 const IDLE_TTL_MS = 3 * 60 * 60 * 1000; // сессия умирает после 3ч бездействия
 
 const app = express();
@@ -173,6 +177,8 @@ async function meInfo(rec) {
 function friendly(e) {
   const msg = (e && (e.errorMessage || e.message)) || String(e);
   const map = [
+    ['API_ID_INVALID', 'Telegram отклонил API_ID/API_HASH. Проверьте переменные Render и создайте новые API credentials, если старые раскрыты.'],
+    ['API_ID_PUBLISHED_FLOOD', 'Telegram ограничил этот API ID. Проверьте credentials в my.telegram.org.'],
     ['PHONE_NUMBER_INVALID', 'Некорректный номер телефона'],
     ['PHONE_CODE_INVALID', 'Неверный код'],
     ['PHONE_CODE_EXPIRED', 'Код истёк — начните вход заново'],
@@ -299,7 +305,7 @@ io.on('connection', (socket) => {
     if (!clean || clean.length < 8) return socket.emit('auth:error', 'Введите номер в международном формате');
     let client = null;
     try {
-      socket.emit('auth:status', 'Соединение с Telegram…');
+      socket.emit('auth:status', 'Подключаюсь к Telegram…');
       client = new TelegramClient(new StringSession(''), API_ID, API_HASH, {
         connectionRetries: 5,
         deviceModel: 'MorphyGram',
@@ -311,12 +317,16 @@ io.on('connection', (socket) => {
       await client.connect();
       // Запрос кода: Telegram сам решает канал (приложение Telegram, SMS или звонок)
       const sent = await client.sendCode({ apiId: API_ID, apiHash: API_HASH }, clean);
+      if (!sent || !sent.phoneCodeHash || !sent.type) throw new Error('TELEGRAM_CODE_REQUEST_INCOMPLETE');
       const t = sent.type && sent.type.className;
       const via = (sent.isCodeViaApp || t === 'auth.SentCodeTypeApp') ? 'app'
         : (t === 'auth.SentCodeTypeSms' ? 'sms' : 'other');
       pendingPhone = { client, phone: clean, hash: sent.phoneCodeHash };
-      socket.emit('auth:need_code', { via });
+      console.info('[auth] Telegram accepted a code request; delivery type:', t || 'unknown');
+      socket.emit('auth:need_code', { via, type: t || 'unknown' });
     } catch (e) {
+      const raw = (e && (e.errorMessage || e.message)) || String(e);
+      console.error('[auth] Code request failed:', raw);
       try { if (client) await client.disconnect(); } catch (_) {}
       socket.emit('auth:failed', friendly(e));
     }
