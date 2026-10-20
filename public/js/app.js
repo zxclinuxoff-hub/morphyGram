@@ -32,9 +32,9 @@ const flagOf = (iso) => String.fromCodePoint(...[...iso].map((c) => 127397 + c.c
 let country = COUNTRIES[0];
 
 const TITLES = {
-  phone: ['Your Phone', 'Please confirm your country code and enter your phone number.'],
-  code: ['Enter code', 'We have sent the code to your Telegram.'],
-  password: ['Enter a Password', 'Your account is protected with an additional password.'],
+  phone: ['Ваш номер телефона', 'Выберите страну и введите номер телефона.'],
+  code: ['Введите код', 'Проверьте Telegram на другом устройстве. Способ доставки выбирает Telegram.'],
+  password: ['Облачный пароль', 'Для этого аккаунта включена двухэтапная аутентификация.'],
 };
 const AUTH_STEPS = ['phone', 'code', 'password'];
 
@@ -166,9 +166,9 @@ socket.on('auth:expired', () => {
 });
 socket.on('auth:status', (msg) => authStatus(msg));
 socket.on('auth:need_code', (info) => {
-  const sub = info && info.via === 'app' ? 'We have sent the code to the Telegram app on your other device.'
-    : info && info.via === 'sms' ? 'We have sent you an SMS with the code.'
-    : 'We have sent the code to your Telegram or SMS.';
+  const sub = info && info.via === 'app' ? 'Код отправлен в официальный Telegram на другом устройстве. SMS может не прийти.'
+    : info && info.via === 'sms' ? 'Telegram выбрал доставку по SMS. Если SMS задерживается, проверьте номер и подождите.'
+    : 'Telegram выбрал способ доставки кода. Сначала проверьте официальный Telegram на других устройствах; SMS не гарантируется.';
   showStep('code');
   $('#auth-sub').textContent = sub;
   $('#code').value = '';
