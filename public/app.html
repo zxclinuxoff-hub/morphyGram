@@ -20,49 +20,53 @@
 </head>
 <body class="app-body">
 
-  <!-- ВХОД -->
-  <div id="login" class="auth-wrap">
-    <div class="bg-fx" aria-hidden="true"><div class="glow glow-red"></div><div class="noise"></div></div>
-    <div class="auth-card">
-      <img src="/icons/icon-192.png" alt="MorphyGram" class="auth-logo">
-      <h1 class="auth-title">MORPHY<b>GRAM</b></h1>
-      <p class="auth-sub">вход по номеру Telegram</p>
+  <!-- ВХОД (в стиле Telegram) -->
+  <div id="login" class="tg-auth">
+    <div class="tg-inner">
+      <div class="tg-emoji" aria-hidden="true">☎️</div>
+      <h1 id="auth-title" class="tg-title">Your Phone</h1>
+      <p id="auth-sub" class="tg-sub">Please confirm your country code and enter your phone number.</p>
 
-      <div class="step hidden" id="step-qr">
-        <div class="qr-box"><img id="qr-img" class="qr-img" alt="QR-код для входа"></div>
-        <p class="qr-hint">Открой Telegram на телефоне: Настройки → Устройства → Подключить устройство. Наведи камеру на код или нажми кнопку ниже.</p>
-        <a id="qr-link" class="btn btn-primary wide" href="#">Открыть в Telegram</a>
-        <button id="btn-qr-retry" class="linklike">Обновить QR-код</button>
-        <button id="btn-to-phone" class="linklike">Войти по номеру телефона</button>
+      <div id="step-phone" class="tg-step">
+        <button id="btn-country" class="tg-row tg-country" type="button">
+          <span id="country-flag" class="tg-flag"></span>
+          <span id="country-name" class="tg-country-name"></span>
+          <span class="tg-chev">›</span>
+        </button>
+        <div class="tg-row tg-phone-row">
+          <span id="dial" class="tg-dial"></span>
+          <input id="phone" class="tg-input" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="00 000 00 00">
+        </div>
+        <button id="btn-phone" class="tg-btn" disabled>Continue</button>
       </div>
 
-      <div class="step" id="step-phone">
-        <label class="lbl" for="phone">Номер телефона</label>
-        <input id="phone" class="inp" type="tel" autocomplete="tel" placeholder="+7 900 000-00-00">
-        <button id="btn-phone" class="btn btn-primary wide">Получить код</button>
-        <button id="btn-to-qr" class="linklike">← войти по QR-коду</button>
+      <div id="step-code" class="tg-step hidden">
+        <div class="tg-row">
+          <input id="code" class="tg-input tg-code" type="tel" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="• • • • •">
+        </div>
+        <button id="btn-code" class="tg-btn" disabled>Continue</button>
+        <button id="btn-back-phone" class="tg-link" type="button">Change phone number</button>
       </div>
 
-      <div class="step hidden" id="step-code">
-        <label class="lbl" for="code">Код из Telegram</label>
-        <input id="code" class="inp code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="•••••">
-        <button id="btn-code" class="btn btn-primary wide">Войти</button>
-        <button id="btn-back-phone" class="linklike">← другой номер</button>
+      <div id="step-password" class="tg-step hidden">
+        <div class="tg-row">
+          <input id="password" class="tg-input" type="password" autocomplete="current-password" placeholder="Password">
+        </div>
+        <button id="btn-password" class="tg-btn" disabled>Continue</button>
       </div>
 
-      <div class="step hidden" id="step-password">
-        <label class="lbl" for="password">Облачный пароль (2FA)</label>
-        <input id="password" class="inp" type="password" autocomplete="current-password" placeholder="Пароль">
-        <button id="btn-password" class="btn btn-primary wide">Войти</button>
-      </div>
+      <p id="auth-status" class="tg-status"></p>
+      <p id="auth-error" class="tg-error"></p>
+      <p class="tg-foot">Сессия живёт только в памяти сервера. Войти можно только в свой аккаунт.</p>
+    </div>
+  </div>
 
-      <p id="auth-status" class="auth-status"></p>
-      <p id="auth-error" class="auth-error"></p>
-
-      <p class="auth-note">
-        Сессия живёт только в оперативной памяти сервера и стирается при его перезапуске.
-        Войти можно только в свой собственный аккаунт.
-      </p>
+  <!-- ВЫБОР СТРАНЫ -->
+  <div id="countries-modal" class="tg-modal hidden" role="dialog" aria-modal="true">
+    <div class="tg-sheet">
+      <div class="tg-sheet-head"><b>Country</b><button id="btn-country-close" class="tg-link" type="button">Cancel</button></div>
+      <div class="tg-row"><input id="country-search" class="tg-input" placeholder="Search" autocomplete="off"></div>
+      <div id="country-list" class="tg-country-list"></div>
     </div>
   </div>
 
