@@ -12,19 +12,83 @@ const state = {
   msgs: new Map(),      // id -> элемент текущего чата (для апдейтов)
 };
 
-/* =================-auth================= */
-const steps = ['qr', 'phone', 'code', 'password'];
+/* =================-auth (как в Telegram)================= */
+// [название, код страны ISO, код набора]
+const COUNTRIES = [
+  ['Ukraine', 'UA', '380'], ['Russia', 'RU', '7'], ['Belarus', 'BY', '375'],
+  ['Kazakhstan', 'KZ', '7'], ['Kyrgyzstan', 'KG', '996'], ['Uzbekistan', 'UZ', '998'],
+  ['Armenia', 'AM', '374'], ['Azerbaijan', 'AZ', '994'], ['Georgia', 'GE', '995'],
+  ['Moldova', 'MD', '373'], ['Latvia', 'LV', '371'], ['Lithuania', 'LT', '370'],
+  ['Estonia', 'EE', '372'], ['Poland', 'PL', '48'], ['Czechia', 'CZ', '420'],
+  ['Germany', 'DE', '49'], ['France', 'FR', '33'], ['Italy', 'IT', '39'],
+  ['Spain', 'ES', '34'], ['Netherlands', 'NL', '31'], ['United Kingdom', 'GB', '44'],
+  ['Sweden', 'SE', '46'], ['Finland', 'FI', '358'], ['Serbia', 'RS', '381'],
+  ['Turkey', 'TR', '90'], ['Israel', 'IL', '972'], ['United Arab Emirates', 'AE', '971'],
+  ['United States', 'US', '1'], ['Canada', 'CA', '1'], ['Mexico', 'MX', '52'],
+  ['Brazil', 'BR', '55'], ['China', 'CN', '86'], ['Japan', 'JP', '81'],
+  ['India', 'IN', '91'],
+];
+const flagOf = (iso) => String.fromCodePoint(...[...iso].map((c) => 127397 + c.charCodeAt(0)));
+let country = COUNTRIES[0];
+
+const TITLES = {
+  phone: ['Your Phone', 'Please confirm your country code and enter your phone number.'],
+  code: ['Enter code', 'We have sent the code to your Telegram.'],
+  password: ['Enter a Password', 'Your account is protected with an additional password.'],
+};
+const AUTH_STEPS = ['phone', 'code', 'password'];
+
 function showStep(name) {
-  steps.forEach((s) => $('#step-' + s).classList.toggle('hidden', s !== name));
+  AUTH_STEPS.forEach((s) => $('#step-' + s).classList.toggle('hidden', s !== name));
+  $('#auth-title').textContent = TITLES[name][0];
+  $('#auth-sub').textContent = TITLES[name][1];
 }
 function authError(msg) { $('#auth-error').textContent = msg || ''; }
 function authStatus(msg) { $('#auth-status').textContent = msg || ''; }
+function digits(v) { return String(v || '').replace(/\D/g, ''); }
+
+function updateButtons() {
+  $('#btn-phone').disabled = digits($('#phone').value).length < 7;
+  $('#btn-code').disabled = digits($('#code').value).length < 5;
+  $('#btn-password').disabled = !$('#password').value;
+}
+
+function renderCountry() {
+  $('#country-flag').textContent = flagOf(country[1]);
+  $('#country-name').textContent = country[0];
+  $('#dial').textContent = '+' + country[2];
+}
+
+function renderCountryList(q) {
+  const list = $('#country-list');
+  const s = q.trim().toLowerCase();
+  list.innerHTML = '';
+  COUNTRIES
+    .filter((c) => !s || c[0].toLowerCase().includes(s) || c[2].startsWith(s.replace('+', '')))
+    .forEach((c) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tg-country-item';
+      b.innerHTML = '<span class="tg-flag"></span><span class="tg-cname"></span><span class="tg-cdial"></span>';
+      b.querySelector('.tg-flag').textContent = flagOf(c[1]);
+      b.querySelector('.tg-cname').textContent = c[0];
+      b.querySelector('.tg-cdial').textContent = '+' + c[2];
+      b.addEventListener('click', () => {
+        country = c;
+        renderCountry();
+        $('#countries-modal').classList.add('hidden');
+        $('#phone').focus();
+      });
+      list.appendChild(b);
+    });
+}
 
 function showLogin() {
   $('#login').classList.remove('hidden');
   $('#main').classList.add('hidden');
   showStep('phone');
-  authStatus();
+  authError(); authStatus();
+  updateButtons();
 }
 
 function showApp() {
@@ -35,31 +99,54 @@ function showApp() {
   socket.emit('dialogs:list');
 }
 
+renderCountry();
+
+$('#btn-country').addEventListener('click', () => {
+  $('#countries-modal').classList.remove('hidden');
+  $('#country-search').value = '';
+  renderCountryList('');
+  $('#country-search').focus();
+});
+$('#btn-country-close').addEventListener('click', () => $('#countries-modal').classList.add('hidden'));
+$('#countries-modal').addEventListener('click', (e) => { if (e.target.id === 'countries-modal') $('#countries-modal').classList.add('hidden'); });
+$('#country-search').addEventListener('input', (e) => renderCountryList(e.target.value));
+
+$('#phone').addEventListener('input', () => { $('#phone').value = digits($('#phone').value); updateButtons(); });
+$('#code').addEventListener('input', () => { $('#code').value = digits($('#code').value).slice(0, 6); updateButtons(); });
+$('#password').addEventListener('input', updateButtons);
+
 $('#btn-phone').addEventListener('click', () => {
+  const d = digits($('#phone').value);
+  if (d.length < 7) return;
   authError(); authStatus('Отправляю код…');
-  socket.emit('auth:phone', { phone: $('#phone').value });
+  $('#btn-phone').disabled = true;
+  socket.emit('auth:phone', { phone: '+' + country[2] + d });
 });
 $('#btn-code').addEventListener('click', () => {
-  authError();
-  socket.emit('auth:code', { code: $('#code').value });
+  const c = digits($('#code').value);
+  if (c.length < 5) return;
+  authError(); authStatus('Проверяю код…');
+  socket.emit('auth:code', { code: c });
 });
 $('#btn-password').addEventListener('click', () => {
-  authError();
-  socket.emit('auth:password', { password: $('#password').value });
+  const p = $('#password').value;
+  if (!p) return;
+  authError(); authStatus('Проверяю пароль…');
+  socket.emit('auth:password', { password: p });
 });
-$('#btn-back-phone').addEventListener('click', () => { authError(); authStatus(); showStep('phone'); });
-$('#btn-qr-retry').addEventListener('click', () => { authError(); authStatus('Готовлю QR-код…'); socket.emit('auth:qr:start'); });
-$('#btn-to-phone').addEventListener('click', () => { authError(); authStatus(); socket.emit('auth:qr:stop'); showStep('phone'); });
-$('#btn-to-qr').addEventListener('click', () => { authError(); authStatus('Готовлю QR-код…'); showStep('qr'); socket.emit('auth:qr:start'); });
-$('#code').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#btn-code').click(); });
-$('#password').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#btn-password').click(); });
-$('#phone').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#btn-phone').click(); });
+$('#btn-back-phone').addEventListener('click', () => { authError(); authStatus(); showStep('phone'); updateButtons(); });
+
+['phone', 'code', 'password'].forEach((id) => {
+  $('#' + id).addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !$('#btn-' + id).disabled) $('#btn-' + id).click();
+  });
+});
 
 $('#btn-logout').addEventListener('click', () => socket.emit('logout'));
 
 socket.on('connect', () => {
   if (state.token) {
-    authStatus && ($('#login').classList.contains('hidden') || authStatus('Восстанавливаю сессию…'));
+    authStatus('Восстанавливаю сессию…');
     socket.emit('auth:resume', { token: state.token });
   } else {
     showLogin();
@@ -77,22 +164,23 @@ socket.on('auth:expired', () => {
   localStorage.removeItem('mg_token');
   showLogin();
 });
+socket.on('auth:status', (msg) => authStatus(msg));
 socket.on('auth:need_code', (info) => {
-  const where = info && info.via === 'app' ? 'Код отправлен в приложение Telegram'
-    : info && info.via === 'sms' ? 'Код отправлен SMS'
-    : 'Код отправлен (см. Telegram или SMS)';
-  authStatus(where);
+  const sub = info && info.via === 'app' ? 'We have sent the code to the Telegram app on your other device.'
+    : info && info.via === 'sms' ? 'We have sent you an SMS with the code.'
+    : 'We have sent the code to your Telegram or SMS.';
   showStep('code');
+  $('#auth-sub').textContent = sub;
+  $('#code').value = '';
+  authStatus(); authError(); updateButtons();
   $('#code').focus();
 });
-socket.on('auth:need_password', () => { authStatus('На аккаунте облачный пароль'); showStep('password'); $('#password').focus(); });
-socket.on('auth:error', (msg) => { authStatus(); authError(msg); });
-socket.on('auth:failed', (msg) => { authStatus(); authError(msg); showStep('phone'); });
-socket.on('auth:qr', ({ image, url }) => {
-  $('#qr-img').src = image;
-  $('#qr-link').href = url;
-  authStatus('Отсканируй код или открой в Telegram');
+socket.on('auth:need_password', () => {
+  authStatus(); authError(); showStep('password'); updateButtons();
+  $('#password').focus();
 });
+socket.on('auth:error', (msg) => { authStatus(); authError(msg); updateButtons(); });
+socket.on('auth:failed', (msg) => { authStatus(); authError(msg); showStep('phone'); updateButtons(); });
 
 /* =================dialogs================= */
 socket.on('dialogs', ({ list }) => {
