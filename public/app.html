@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>MorphyGram</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#070708">
+  <link rel="icon" href="/icons/favicon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MorphyGram">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="app-body">
+
+  <!-- ВХОД (в стиле Telegram) -->
+  <div id="login" class="tg-auth">
+    <div class="tg-inner">
+      <div class="tg-emoji" aria-hidden="true"><span class="tg-plane">➤</span></div>
+      <h1 id="auth-title" class="tg-title">Ваш номер телефона</h1>
+      <p id="auth-sub" class="tg-sub">Выберите страну и введите номер телефона.</p>
+
+      <div id="step-phone" class="tg-step">
+        <button id="btn-country" class="tg-row tg-country" type="button">
+          <span id="country-flag" class="tg-flag"></span>
+          <span id="country-name" class="tg-country-name"></span>
+          <span class="tg-chev">›</span>
+        </button>
+        <div class="tg-row tg-phone-row">
+          <span id="dial" class="tg-dial"></span>
+          <input id="phone" class="tg-input" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="00 000 00 00">
+        </div>
+        <button id="btn-phone" class="tg-btn" disabled>Далее</button>
+      </div>
+
+      <div id="step-code" class="tg-step hidden">
+        <div class="tg-row">
+          <input id="code" class="tg-input tg-code" type="tel" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="• • • • •">
+        </div>
+        <button id="btn-code" class="tg-btn" disabled>Далее</button>
+        <button id="btn-resend" class="tg-link" type="button">Код не пришёл? Отправить SMS</button>
+        <button id="btn-back-phone" class="tg-link" type="button">Изменить номер</button>
+      </div>
+
+      <div id="step-password" class="tg-step hidden">
+        <div class="tg-row">
+          <input id="password" class="tg-input" type="password" autocomplete="current-password" placeholder="Облачный пароль">
+        </div>
+        <button id="btn-password" class="tg-btn" disabled>Далее</button>
+      </div>
+
+      <p id="auth-status" class="tg-status"></p>
+      <p id="auth-error" class="tg-error"></p>
+      <p class="tg-foot">Неофициальный клиент Telegram. Вводите данные только для собственного аккаунта.</p>
+    </div>
+  </div>
+
+  <!-- ВЫБОР СТРАНЫ -->
+  <div id="countries-modal" class="tg-modal hidden" role="dialog" aria-modal="true">
+    <div class="tg-sheet">
+      <div class="tg-sheet-head"><b>Выберите страну</b><button id="btn-country-close" class="tg-link" type="button">Отмена</button></div>
+      <div class="tg-row"><input id="country-search" class="tg-input" placeholder="Поиск страны" autocomplete="off"></div>
+      <div id="country-list" class="tg-country-list"></div>
+    </div>
+  </div>
+
+  <!-- ОСНОВНОЙ ЭКРАН -->
+  <div id="main" class="main hidden">
+    <aside class="sidebar" id="sidebar">
+      <header class="side-head">
+        <img src="/icons/icon-192.png" class="mini-logo" alt="">
+        <div class="me">
+          <b id="me-name">…</b>
+          <span id="me-phone"></span>
+        </div>
+        <button id="btn-logout" class="icon-btn" title="Выйти" aria-label="Выйти">⏻</button>
+      </header>
+      <div id="dialogs" class="dialogs" role="list">
+        <div class="dlg-loading">Загружаю чаты…</div>
+      </div>
+    </aside>
+
+    <section class="chatpane">
+      <header class="chat-head">
+        <button id="btn-back" class="icon-btn back" aria-label="Назад">‹</button>
+        <div class="chat-title" id="chat-title">Выберите чат</div>
+      </header>
+
+      <div id="messages" class="messages">
+        <div class="empty-msg">
+          ☾ Ночная смена началась.<br>
+          Чаты — слева. Удалённые сообщения будут с красной меткой,
+          отредактированные — с историей правок.
+        </div>
+      </div>
+
+      <footer class="composer" id="composer">
+        <input id="input" class="inp" placeholder="Сообщение…" autocomplete="off">
+        <button id="btn-send" class="send-btn" aria-label="Отправить">➤</button>
+      </footer>
+    </section>
+  </div>
+
+  <!-- МОДАЛКА ИСТОРИИ ПРАВОК -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card" id="modal-body"></div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

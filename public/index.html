@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080808">
+<meta name="robots" content="index,follow">
+<meta name="description" content="MorphyGram — веб-клиент Telegram с удалёнными и изменёнными сообщениями, одноразовыми медиа и установкой как приложение.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MorphyGram">
+<meta property="og:description" content="Веб-клиент Telegram: анти-удаление, история правок, одноразовые медиа.">
+<meta property="og:image" content="img/avatar.png">
+<title>MorphyGram</title>
+<link rel="icon" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/bio.css">
+<link rel="stylesheet" href="css/bio-extra.css">
+<script>document.documentElement.classList.add('js','booting');</script>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="glow" aria-hidden="true"></div>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div class="scanlines" aria-hidden="true"></div>
+<div class="progress-line" id="progress" aria-hidden="true"></div>
+<div class="click-layer" id="clickLayer" aria-hidden="true"></div>
+<div class="spotlight" id="spotlight" aria-hidden="true"></div>
+<div class="glitch-slices" id="slices" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="bokeh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<!-- boot -->
+<div id="boot">
+  <div class="boot-inner">
+    <div class="boot-top"><span>morphygram.app</span><span>boot v4.0</span></div>
+    <pre id="bootCode" class="boot-code"></pre>
+    <div class="boot-bar"><i id="bootBar"></i></div>
+    <span class="boot-skip">нажми, чтобы пропустить</span>
+  </div>
+</div>
+
+<!-- hello easter egg -->
+<div class="hello" id="hello" hidden role="dialog" aria-label="Пасхалка">
+  <p class="hello-text" id="helloText"></p>
+  <span class="hello-heart" aria-hidden="true">🖤</span>
+  <span class="hello-hint">нажми, чтобы закрыть</span>
+</div>
+
+<header class="topline fx" style="--d:0s">
+  <a class="mini-brand" href="#profile"><span class="logo">m.</span><span>MORPHYGRAM<span class="red blink">_</span></span></a>
+  <span class="clock" id="clock" aria-label="Время">00:00:00</span>
+  <div class="fx-menu">
+    <button class="fx-open" id="fxOpen" type="button" aria-expanded="false" aria-controls="fxPanel">fx</button>
+    <div class="fx-panel" id="fxPanel" hidden>
+      <div class="fx-row">
+        <span class="fx-label">акцент</span>
+        <div class="swatches" role="group" aria-label="Акцентный цвет">
+          <button class="sw on" data-theme="red" style="--c:#ef2947" aria-label="Красный"></button>
+          <button class="sw" data-theme="cyan" style="--c:#2fd6ff" aria-label="Циан"></button>
+          <button class="sw" data-theme="violet" style="--c:#a06bff" aria-label="Фиолетовый"></button>
+        </div>
+      </div>
+      <button class="fx-item" id="scanBtn" type="button" aria-pressed="false"><span>сканлайны</span><i></i></button>
+      <button class="fx-item" id="rainBtn" type="button" aria-pressed="false"><span>дождь</span><i></i></button>
+      <button class="fx-item" id="calmBtn" type="button" aria-pressed="false"><span>спокойный режим</span><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="profile" id="profile">
+  <div class="meta fx" style="--d:.1s"><span>PERSONAL PAGE</span><span>DEVELOPER / WEB</span></div>
+
+  <div class="avatar-wrap fx" style="--d:.2s">
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="orbit"><i></i></div>
+    <span class="wave"></span><span class="wave w2"></span><span class="wave w3"></span>
+    <button class="avatar-btn" id="avatarBtn" type="button" aria-label="Аватар">
+      <img id="tilt" src="img/avatar.png" alt="MorphyGram" width="120" height="120" decoding="async">
+    </button>
+    <span class="online-dot"></span>
+    <span class="burst-count" id="burstCount">0</span>
+  </div>
+
+  <div class="identity fx" style="--d:.3s">
+    <h1 class="handle" id="handle">MORPHYGRAM<span class="red blink">_</span></h1>
+    <p class="role">веб-клиент telegram / pwa / node</p>
+    <p class="bio"><span id="bioText"></span><span class="caret"></span></p>
+  </div>
+
+  <div class="tags fx" style="--d:.4s"><span>telegram</span><span>pwa</span><span>node</span><span>gramjs</span></div>
+
+  <div class="status fx spot" style="--d:.5s">
+    <span class="led"></span>
+    <div><small>сейчас</small><strong id="statusText">готов к входу</strong></div>
+    <span class="status-num" id="statusNum">↗ 01</span>
+  </div>
+
+  <div class="stats fx" style="--d:.6s">
+    <div class="stat"><b data-count="5">0</b><small>функций</small></div>
+    <div class="stat"><b data-count="1">0</b><small>клиент</small></div>
+    <div class="stat"><b data-count="0">0</b><small>файлов на диске</small></div>
+  </div>
+
+  <!-- actions: 1 big + 2 small, fixed heights -->
+  <div class="actions fx" style="--d:.7s">
+    <a class="act primary" href="/app"><span>Открыть MorphyGram</span><b>↗</b></a>
+    <div class="act-row">
+      <button class="act" id="copyNick" type="button"><span>Ник</span><b>⧉</b></button>
+      <button class="act" id="shareBtn" type="button"><span>Поделиться</span><b>⇪</b></button>
+    </div>
+  </div>
+
+  <div class="card skills fx" style="--d:.8s">
+    <div class="card-head"><span>stack</span><span class="muted">[ web ]</span></div>
+    <div class="skill" data-skill="Node.js"><span>Node.js</span><div class="meter"><i></i></div><em>80</em></div>
+    <div class="skill" data-skill="GramJS (MTProto)"><span>GramJS (MTProto)</span><div class="meter"><i></i></div><em>75</em></div>
+    <div class="skill" data-skill="Socket.IO"><span>Socket.IO</span><div class="meter"><i></i></div><em>70</em></div>
+    <div class="skill" data-skill="PWA / HTML / CSS"><span>PWA / HTML / CSS</span><div class="meter"><i></i></div><em>85</em></div>
+    <div class="skill" data-skill="Render"><span>Render</span><div class="meter"><i></i></div><em>60</em></div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-track">
+  <span>DEVELOPER</span><i>✳</i><span>WEB</span><i>✳</i><span>TELEGRAM</span><i>✳</i><span>LINUX</span><i>✳</i><span>MORPHYGRAM</span><i>✳</i><span>CODE</span><i>✳</i>
+  <span>DEVELOPER</span><i>✳</i><span>WEB</span><i>✳</i><span>TELEGRAM</span><i>✳</i><span>LINUX</span><i>✳</i><span>MORPHYGRAM</span><i>✳</i><span>CODE</span><i>✳</i>
+</div></div>
+<div class="ticker rev" aria-hidden="true"><div class="ticker-track">
+  <span>BUILD</span><i>✳</i><span>BREAK</span><i>✳</i><span>FIX</span><i>✳</i><span>SHIP</span><i>✳</i><span>REPEAT</span><i>✳</i>
+  <span>BUILD</span><i>✳</i><span>BREAK</span><i>✳</i><span>FIX</span><i>✳</i><span>SHIP</span><i>✳</i><span>REPEAT</span><i>✳</i>
+</div></div>
+
+<!-- music -->
+<section class="music reveal neon" id="music" hidden>
+  <div class="music-top"><span class="eyebrow"><i class="dot-pulse"></i>NOW PLAYING</span><span>MP3 · KAI ANGEL</span></div>
+  <div class="cover-row">
+    <div class="cover" id="cover"><img src="img/avatar.png" alt="Обложка: Kai Angel — Jump" width="480" height="480" loading="lazy" decoding="async"></div>
+    <div class="track-info">
+      <h2 class="track-title">Jump</h2>
+      <p class="track-artist">Kai Angel</p>
+      <div class="viz" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="play" id="playBtn" type="button" aria-label="Играть">
+      <svg viewBox="0 0 24 24" class="i-play"><path d="M7 4.5v15l13-7.5z"/></svg>
+      <svg viewBox="0 0 24 24" class="i-pause"><path d="M6 4.5h4v15H6zM14 4.5h4v15h-4z"/></svg>
+    </button>
+    <div class="bar" id="bar"><div class="fill" id="fill"></div><div class="knob" id="knob"></div></div>
+    <span class="time"><span id="cur">0:00</span> / <span id="dur">0:00</span></span>
+  </div>
+  <div class="row-btns">
+    <button class="chip" id="rewBtn" type="button">−10с</button>
+    <button class="chip" id="fwdBtn" type="button">+10с</button>
+    <button class="chip" id="loopBtn" type="button">повтор</button>
+  </div>
+  <label class="vol-row">
+    <span class="vol-ico" id="volIco">🔊</span>
+    <input id="vol" type="range" min="0" max="1" step="0.01" value="0.9" aria-label="Громкость">
+    <span class="vol-val" id="volVal">90%</span>
+  </label>
+  <p class="ios-note small muted">громкость на iPhone меняется кнопками телефона</p>
+  <audio id="audio" preload="none"></audio>
+</section>
+
+<nav class="section-nav reveal" aria-label="Разделы">
+  <a href="#profile" class="active">Профиль</a><a href="#features">Функции</a><a href="#install">Установка</a><a href="#projects">Проект</a><a href="#terminal">Терминал</a><a href="#updates">Обновления</a><a href="#links">Ссылки</a>
+</nav>
+
+<!-- features -->
+<section class="block reveal" id="features">
+  <div class="block-title"><span class="label scramble"><i></i>ФУНКЦИИ</span><span class="muted">[ 05 ]</span></div>
+  <article class="update"><time>✓</time><div><strong>Удалённые сообщения</strong><p>Сообщение, которое собеседник удалил, остаётся в чате с пометкой.</p></div><span class="mark">LIVE</span></article>
+  <article class="update"><time>✓</time><div><strong>История правок</strong><p>Все предыдущие версии изменённого сообщения, открываются по значку «изменено».</p></div><span class="mark">LIVE</span></article>
+  <article class="update"><time>✓</time><div><strong>Одноразовые медиа</strong><p>Фото и видео с таймером сохраняются на сервере сразу при получении.</p></div><span class="mark">LIVE</span></article>
+  <article class="update"><time>✓</time><div><strong>Установка как приложение</strong><p>PWA: на iPhone, Android и ПК без App Store и Google Play.</p></div><span class="mark">PWA</span></article>
+  <article class="update"><time>✓</time><div><strong>Сессии только в памяти</strong><p>Ничего не пишется на диск. Перезапуск сервера = выход из аккаунтов.</p></div><span class="mark dim">SAFE</span></article>
+</section>
+
+<!-- install -->
+<section class="block reveal" id="install">
+  <div class="block-title"><span class="label scramble"><i></i>УСТАНОВКА</span><span class="muted">[ 2 шага ]</span></div>
+  <div class="card">
+    <div class="card-head"><span>iPhone</span><span class="muted">Safari</span></div>
+    <p class="small muted">Открой сайт в Safari → «Поделиться» → «На экран “Домой”».</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span>Android</span><span class="muted">Chrome</span></div>
+    <p class="small muted">Открой сайт в Chrome → ⋮ → «Установить приложение».</p>
+  </div>
+  <a class="link spot" href="/app"><span class="sym">↗</span><span><strong>Войти по номеру Telegram</strong><small>вход в свой аккаунт</small></span><span class="arr">OPEN ↗</span></a>
+</section>
+
+<!-- projects -->
+<section class="block reveal" id="projects">
+  <div class="block-title"><span class="label scramble"><i></i>PROJECTS</span><span class="muted">[ 02 ]</span></div>
+
+  <article class="project spot neon" id="ghostCard">
+    <div class="project-top">
+      <div class="project-icon">M<span>✳</span></div>
+      <div class="project-info">
+        <div class="project-name">MorphyGram <span class="state">ACTIVE</span></div>
+        <p>Веб-клиент Telegram с сохранением удалённых и изменённых сообщений, одноразовых фото и видео.</p>
+        <div class="chips"><span>УДАЛЁННЫЕ</span><span>ИЗМЕНЁННЫЕ</span><span>ОДНОРАЗОВЫЕ</span></div>
+      </div>
+    </div>
+    <button class="expand" id="ghostToggle" type="button" aria-expanded="false"><span>подробнее</span><b>+</b></button>
+    <div class="expand-body" id="ghostBody"><div class="expand-inner">
+      <p>Работает в браузере и ставится на главный экран телефона как приложение. Сессии хранятся только в памяти сервера, на диск ничего не пишется.</p>
+      <div class="btns2">
+        <a class="act primary" href="/app"><span>Открыть</span><b>↗</b></a>
+        <button class="act" data-copy="morphygram" type="button"><span>Копировать</span><b>⧉</b></button>
+      </div>
+    </div></div>
+  </article>
+
+  <article class="project soon">
+    <div class="project-top">
+      <div class="project-icon dashed">?</div>
+      <div class="project-info">
+        <div class="project-name">Следующий проект <span class="state muted">SOON</span></div>
+        <p>Что-то в работе. Скоро.</p>
+        <div class="progress"><i data-level="35"></i></div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- terminal -->
+<section class="block reveal" id="terminal">
+  <div class="block-title"><span class="label scramble"><i></i>TERMINAL</span><span class="muted">[ try me ]</span></div>
+  <div class="term">
+    <div class="term-out" id="termOut" aria-live="polite"></div>
+    <form class="term-in" id="termForm" autocomplete="off">
+      <span class="prompt">morphygram@web:~$</span>
+      <input id="termInput" type="text" spellcheck="false" aria-label="Команда" placeholder="help">
+    </form>
+    <div class="term-chips">
+      <button type="button" data-cmd="help">help</button>
+      <button type="button" data-cmd="whoami">whoami</button>
+      <button type="button" data-cmd="morphygram --status">morphygram --status</button>
+      <button type="button" data-cmd="date">date</button>
+      <button type="button" data-cmd="clear">clear</button>
+    </div>
+  </div>
+</section>
+
+<!-- updates -->
+<section class="block reveal" id="updates">
+  <div class="block-title"><span class="label scramble"><i></i>LATEST UPDATES</span><span class="muted">[ LOG ]</span></div>
+  <div class="updates">
+    <article class="update"><time>20.10</time><div><strong>MorphyGram — новый сайт</strong><p>Экран входа в стиле Telegram, страны, код по SMS.</p></div><span class="mark">NEW</span></article>
+    <article class="update"><time>16.10</time><div><strong>Анти-удаление и история правок</strong><p>Сервер ловит удаления и правки в открытых чатах.</p></div><span class="mark dim">DONE</span></article>
+  </div>
+</section>
+
+<!-- links -->
+<section class="block reveal" id="links">
+  <div class="block-title"><span class="label scramble"><i></i>FIND ME</span><span class="muted">[ 02 ]</span></div>
+  <a class="link spot" href="https://t.me/morphynne" target="_blank" rel="noopener"><span class="sym">↗</span><span><strong>Автор в Telegram</strong><small>@morphynne</small></span><span class="arr">OPEN ↗</span></a>
+  <a class="link spot" href="/app"><span class="sym">✳</span><span><strong>MorphyGram</strong><small>веб-клиент</small></span><span class="arr">OPEN ↗</span></a>
+  <div class="card mood">
+    <div class="card-head"><span>настроение · хаос</span><span class="muted" id="moodVal">42%</span></div>
+    <input id="mood" type="range" min="0" max="100" value="42" aria-label="Уровень хаоса">
+    <p class="muted small" id="moodText">немного хаоса — норма</p>
+  </div>
+</section>
+
+<footer class="reveal">
+  <span class="brand-foot">MORPHYGRAM<span class="red">_</span></span>
+  <span>© <span id="year"></span></span>
+  <button class="to-top" id="toTop" type="button" aria-label="Наверх">↑</button>
+</footer>
+</main>
+
+<nav class="dock" aria-label="Быстрый переход">
+  <button data-go="profile" class="on" type="button" aria-label="Профиль">◉</button>
+  <button data-go="features" type="button" aria-label="Функции">✦</button>
+  <button data-go="projects" type="button" aria-label="Проекты">⌘</button>
+  <button data-go="links" type="button" aria-label="Контакты">✉</button>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="js/bio.js"></script>
+</body>
+</html>
