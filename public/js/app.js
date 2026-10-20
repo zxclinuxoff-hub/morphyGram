@@ -13,7 +13,7 @@ const state = {
 };
 
 /* =================-auth================= */
-const steps = ['phone', 'code', 'password'];
+const steps = ['qr', 'phone', 'code', 'password'];
 function showStep(name) {
   steps.forEach((s) => $('#step-' + s).classList.toggle('hidden', s !== name));
 }
@@ -24,6 +24,7 @@ function showLogin() {
   $('#login').classList.remove('hidden');
   $('#main').classList.add('hidden');
   showStep('phone');
+  authStatus();
 }
 
 function showApp() {
@@ -35,7 +36,7 @@ function showApp() {
 }
 
 $('#btn-phone').addEventListener('click', () => {
-  authError(); authStatus('Соединение…');
+  authError(); authStatus('Отправляю код…');
   socket.emit('auth:phone', { phone: $('#phone').value });
 });
 $('#btn-code').addEventListener('click', () => {
@@ -47,6 +48,9 @@ $('#btn-password').addEventListener('click', () => {
   socket.emit('auth:password', { password: $('#password').value });
 });
 $('#btn-back-phone').addEventListener('click', () => { authError(); authStatus(); showStep('phone'); });
+$('#btn-qr-retry').addEventListener('click', () => { authError(); authStatus('Готовлю QR-код…'); socket.emit('auth:qr:start'); });
+$('#btn-to-phone').addEventListener('click', () => { authError(); authStatus(); socket.emit('auth:qr:stop'); showStep('phone'); });
+$('#btn-to-qr').addEventListener('click', () => { authError(); authStatus('Готовлю QR-код…'); showStep('qr'); socket.emit('auth:qr:start'); });
 $('#code').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#btn-code').click(); });
 $('#password').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#btn-password').click(); });
 $('#phone').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#btn-phone').click(); });
@@ -73,10 +77,22 @@ socket.on('auth:expired', () => {
   localStorage.removeItem('mg_token');
   showLogin();
 });
-socket.on('auth:need_code', () => { authStatus('Код отправлен в Telegram'); showStep('code'); $('#code').focus(); });
+socket.on('auth:need_code', (info) => {
+  const where = info && info.via === 'app' ? 'Код отправлен в приложение Telegram'
+    : info && info.via === 'sms' ? 'Код отправлен SMS'
+    : 'Код отправлен (см. Telegram или SMS)';
+  authStatus(where);
+  showStep('code');
+  $('#code').focus();
+});
 socket.on('auth:need_password', () => { authStatus('На аккаунте облачный пароль'); showStep('password'); $('#password').focus(); });
 socket.on('auth:error', (msg) => { authStatus(); authError(msg); });
 socket.on('auth:failed', (msg) => { authStatus(); authError(msg); showStep('phone'); });
+socket.on('auth:qr', ({ image, url }) => {
+  $('#qr-img').src = image;
+  $('#qr-link').href = url;
+  authStatus('Отсканируй код или открой в Telegram');
+});
 
 /* =================dialogs================= */
 socket.on('dialogs', ({ list }) => {
