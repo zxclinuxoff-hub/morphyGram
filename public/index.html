@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>MorphyGram — Telegram, который помнит</title>
+  <meta name="description" content="Тёмный веб-клиент Telegram: сохраняет удалённые сообщения, хранит историю правок, открывает одноразовые медиа. Устанавливается на главный экран.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#070708">
+  <link rel="icon" href="/icons/favicon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MorphyGram">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="bg-fx" aria-hidden="true">
+    <div class="glow glow-red"></div>
+    <div class="glow glow-gold"></div>
+    <div class="noise"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="/icons/icon-192.png" alt="MorphyGram" class="brand-logo">
+      <span class="brand-name">MORPHY<b>GRAM</b></span>
+    </div>
+    <nav class="topnav">
+      <a href="#features">Возможности</a>
+      <a href="#install">Установка</a>
+      <a href="#limits">Честно</a>
+      <a class="btn btn-small" href="/app">Открыть</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <p class="kicker">NIGHT SHIFT&nbsp;//&nbsp;24/7</p>
+      <div class="hero-badge">
+        <img src="/icons/icon-512.png" alt="Логотип MorphyGram — металлическая буква M с красными камнями" class="hero-logo">
+      </div>
+      <h1>Telegram, который<br><span class="blood">помнит</span> то, что удаляют</h1>
+      <p class="sub">
+        MorphyGram — тёмный веб-клиент Telegram с памятью. Сообщения, удалённые собеседником,
+        остаются в чате с меткой «удалено». Правки не затирают историю. Одноразовые медиа
+        сохраняются в момент получения. Ставится на главный экран iPhone и Android как приложение.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/app">Войти по номеру</a>
+        <a class="btn btn-ghost" href="#install">Как установить</a>
+      </div>
+      <div class="hero-chips">
+        <span class="chip">iPhone</span>
+        <span class="chip">Android</span>
+        <span class="chip">ПК</span>
+        <span class="chip">PWA · полный экран</span>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="section">
+      <h2 class="sec-title">Возможности</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="card-ico">☠</div>
+          <h3>Анти-удаление</h3>
+          <p>Собеседник удалил сообщение? В MorphyGram оно останется — перечёркнутое, с красной меткой
+            «удалено». Клиент ловит событие удаления и сохраняет содержимое, которое уже дошло до вас.</p>
+        </article>
+        <article class="card">
+          <div class="card-ico">✎</div>
+          <h3>История правок</h3>
+          <p>Каждое отредактированное сообщение хранит все свои версии. Значок «изменено» кликабелен:
+            открывается список предыдущих текстов с временем каждой правки.</p>
+        </article>
+        <article class="card">
+          <div class="card-ico">⏱</div>
+          <h3>Одноразовые медиа</h3>
+          <p>Фото и видео с таймером исчезновения скачиваются сервером сразу при получении —
+            и остаются доступными у вас, с меткой «одноразовое».</p>
+        </article>
+        <article class="card">
+          <div class="card-ico">▣</div>
+          <h3>Установка на «Домой»</h3>
+          <p>Это PWA: добавляется на главный экран iPhone и Android без App Store и Play Market.
+            Запускается на весь экран, как нативное приложение, с вашей иконкой M.</p>
+        </article>
+        <article class="card">
+          <div class="card-ico">⛨</div>
+          <h3>Сессии только в памяти</h3>
+          <p>Сервер не пишет сессии на диск: они живут в оперативной памяти и исчезают при перезапуске.
+            Вход — только под собственным аккаунтом, переключателя между аккаунтами здесь нет и не будет.</p>
+        </article>
+        <article class="card">
+          <div class="card-ico">☾</div>
+          <h3>Ночная смена</h3>
+          <p>Чёрная кожа, кровь и золото. Интерфейс создан для ночной работы: тёмные поверхности,
+            никаких белых вспышек, красная подсветка событий.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- INSTALL -->
+    <section id="install" class="section">
+      <h2 class="sec-title">Инструкция по установке</h2>
+      <p class="sec-sub">MorphyGram — это сайт-приложение (PWA). Чтобы «установить телегу»,
+        достаточно добавить этот сайт на главный экран.</p>
+
+      <div class="tabs" role="tablist" aria-label="Платформы">
+        <button class="tab active" data-tab="ios" role="tab">iPhone</button>
+        <button class="tab" data-tab="android" role="tab">Android</button>
+        <button class="tab" data-tab="pc" role="tab">ПК</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-ios">
+        <ol class="steps">
+          <li><b>Откройте этот сайт в Safari</b> — именно Safari, не Chrome (ограничение iOS).</li>
+          <li>Нажмите кнопку <b>«Поделиться»</b> — квадрат со стрелкой вверх внизу экрана.</li>
+          <li>В списке выберите <b>«На экран “Домой”»</b> (Add to Home Screen).</li>
+          <li>Имя оставьте <b>MorphyGram</b> и нажмите <b>«Добавить»</b>.</li>
+          <li>На главном экране появится иконка <b>M</b> — запускайте как обычное приложение.</li>
+        </ol>
+      </div>
+
+      <div class="tab-panel" id="tab-android">
+        <ol class="steps">
+          <li><b>Откройте сайт в Chrome</b> (или другом браузере на Chromium).</li>
+          <li>Нажмите меню <b>⋮</b> справа вверху.</li>
+          <li>Выберите <b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b>.</li>
+          <li>Подтвердите — иконка MorphyGram появится среди приложений.</li>
+        </ol>
+      </div>
+
+      <div class="tab-panel" id="tab-pc">
+        <ol class="steps">
+          <li>Откройте сайт в <b>Chrome / Edge / Opera</b>.</li>
+          <li>В адресной строке справа нажмите значок <b>установки</b> (монитор со стрелкой).</li>
+          <li>Либо: меню браузера → <b>«Установить MorphyGram…»</b>.</li>
+          <li>Приложение откроется в отдельном окне без адресной строки.</li>
+        </ol>
+      </div>
+
+      <div class="note">
+        После установки первый вход делается один раз: номер → код из Telegram → (если включен)
+        облачный пароль. Пока сервер не перезапустился, страница входит автоматически.
+      </div>
+    </section>
+
+    <!-- HONEST LIMITS -->
+    <section id="limits" class="section">
+      <h2 class="sec-title">Честно об ограничениях</h2>
+      <div class="limits">
+        <div class="limit"><b>Анти-удаление работает, пока клиент онлайн.</b>
+          Если сообщение удалили, пока сервер был выключен или вы не открывали чат после последнего
+          запуска — поймать его уже нечем: Telegram не отдаёт удалённое задним числом.</div>
+        <div class="limit"><b>Одноразовые медиа не гарантируются.</b>
+          Обычно скачивание срабатывает, но Telegram может не отдать файл — тогда появится
+          пометка «недоступно».</div>
+        <div class="limit"><b>Это неофициальный клиент.</b>
+          Вход идёт через ваш собственный api_id/api_hash (my.telegram.org). Никакой админ-панели
+          и доступа к чужим аккаунтам в коде нет — принципиально.</div>
+        <div class="limit"><b>Память сервера.</b>
+          Сессии и кэш удалённых сообщений хранятся в RAM и стираются при перезапуске
+          (на бесплатном тарифе Render — при засыпании). Это плата за приватность.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <span class="brand-name small">MORPHY<b>GRAM</b></span>
+      <span class="dim"> · неофициальный клиент. Не аффилирован с Telegram Messenger Inc.</span>
+    </div>
+    <div class="dim">NIGHT SHIFT COMPLETE · CREATED FOR PERSONAL USE</div>
+  </footer>
+
+  <script>
+    // табы инструкции
+    document.querySelectorAll('.tab').forEach(function (t) {
+      t.addEventListener('click', function () {
+        document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+        document.querySelectorAll('.tab-panel').forEach(function (x) { x.classList.remove('active'); });
+        t.classList.add('active');
+        document.getElementById('tab-' + t.dataset.tab).classList.add('active');
+      });
+    });
+    // service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>MorphyGram</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#070708">
+  <link rel="icon" href="/icons/favicon-64.png" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MorphyGram">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="app-body">
+
+  <!-- ВХОД -->
+  <div id="login" class="auth-wrap">
+    <div class="bg-fx" aria-hidden="true"><div class="glow glow-red"></div><div class="noise"></div></div>
+    <div class="auth-card">
+      <img src="/icons/icon-192.png" alt="MorphyGram" class="auth-logo">
+      <h1 class="auth-title">MORPHY<b>GRAM</b></h1>
+      <p class="auth-sub">вход по номеру Telegram</p>
+
+      <div class="step" id="step-phone">
+        <label class="lbl" for="phone">Номер телефона</label>
+        <input id="phone" class="inp" type="tel" autocomplete="tel" placeholder="+7 900 000-00-00">
+        <button id="btn-phone" class="btn btn-primary wide">Получить код</button>
+      </div>
+
+      <div class="step hidden" id="step-code">
+        <label class="lbl" for="code">Код из Telegram</label>
+        <input id="code" class="inp code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="•••••">
+        <button id="btn-code" class="btn btn-primary wide">Войти</button>
+        <button id="btn-back-phone" class="linklike">← другой номер</button>
+      </div>
+
+      <div class="step hidden" id="step-password">
+        <label class="lbl" for="password">Облачный пароль (2FA)</label>
+        <input id="password" class="inp" type="password" autocomplete="current-password" placeholder="Пароль">
+        <button id="btn-password" class="btn btn-primary wide">Войти</button>
+      </div>
+
+      <p id="auth-status" class="auth-status"></p>
+      <p id="auth-error" class="auth-error"></p>
+
+      <p class="auth-note">
+        Сессия живёт только в оперативной памяти сервера и стирается при его перезапуске.
+        Войти можно только в свой собственный аккаунт.
+      </p>
+    </div>
+  </div>
+
+  <!-- ОСНОВНОЙ ЭКРАН -->
+  <div id="main" class="main hidden">
+    <aside class="sidebar" id="sidebar">
+      <header class="side-head">
+        <img src="/icons/icon-192.png" class="mini-logo" alt="">
+        <div class="me">
+          <b id="me-name">…</b>
+          <span id="me-phone"></span>
+        </div>
+        <button id="btn-logout" class="icon-btn" title="Выйти" aria-label="Выйти">⏻</button>
+      </header>
+      <div id="dialogs" class="dialogs" role="list">
+        <div class="dlg-loading">Загружаю чаты…</div>
+      </div>
+    </aside>
+
+    <section class="chatpane">
+      <header class="chat-head">
+        <button id="btn-back" class="icon-btn back" aria-label="Назад">‹</button>
+        <div class="chat-title" id="chat-title">Выберите чат</div>
+      </header>
+
+      <div id="messages" class="messages">
+        <div class="empty-msg">
+          ☾ Ночная смена началась.<br>
+          Чаты — слева. Удалённые сообщения будут с красной меткой,
+          отредактированные — с историей правок.
+        </div>
+      </div>
+
+      <footer class="composer" id="composer">
+        <input id="input" class="inp" placeholder="Сообщение…" autocomplete="off">
+        <button id="btn-send" class="send-btn" aria-label="Отправить">➤</button>
+      </footer>
+    </section>
+  </div>
+
+  <!-- МОДАЛКА ИСТОРИИ ПРАВОК -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card" id="modal-body"></div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
