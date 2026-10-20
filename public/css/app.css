@@ -292,3 +292,9 @@ body.app-body {
   .msg { max-width: 86%; }
   .messages { padding: 14px 10px 6px; }
 }
+
+/* QR-вход */
+.qr-box { display: flex; justify-content: center; align-items: center; min-height: 240px; margin: 8px 0 14px; }
+.qr-img { width: 240px; max-width: 100%; border-radius: 14px; background: #fff; padding: 10px; box-sizing: border-box; }
+.qr-hint { color: #9a9aa3; font-size: 14px; text-align: center; line-height: 1.5; margin: 0 0 16px; }
+#step-qr { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
