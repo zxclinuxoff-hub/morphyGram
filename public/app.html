@@ -23,9 +23,9 @@
   <!-- ВХОД (в стиле Telegram) -->
   <div id="login" class="tg-auth">
     <div class="tg-inner">
-      <div class="tg-emoji" aria-hidden="true">☎️</div>
-      <h1 id="auth-title" class="tg-title">Your Phone</h1>
-      <p id="auth-sub" class="tg-sub">Please confirm your country code and enter your phone number.</p>
+      <div class="tg-emoji" aria-hidden="true"><span class="tg-plane">➤</span></div>
+      <h1 id="auth-title" class="tg-title">Ваш номер телефона</h1>
+      <p id="auth-sub" class="tg-sub">Выберите страну и введите номер телефона.</p>
 
       <div id="step-phone" class="tg-step">
         <button id="btn-country" class="tg-row tg-country" type="button">
@@ -37,35 +37,35 @@
           <span id="dial" class="tg-dial"></span>
           <input id="phone" class="tg-input" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="00 000 00 00">
         </div>
-        <button id="btn-phone" class="tg-btn" disabled>Continue</button>
+        <button id="btn-phone" class="tg-btn" disabled>Далее</button>
       </div>
 
       <div id="step-code" class="tg-step hidden">
         <div class="tg-row">
           <input id="code" class="tg-input tg-code" type="tel" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="• • • • •">
         </div>
-        <button id="btn-code" class="tg-btn" disabled>Continue</button>
-        <button id="btn-back-phone" class="tg-link" type="button">Change phone number</button>
+        <button id="btn-code" class="tg-btn" disabled>Далее</button>
+        <button id="btn-back-phone" class="tg-link" type="button">Изменить номер</button>
       </div>
 
       <div id="step-password" class="tg-step hidden">
         <div class="tg-row">
-          <input id="password" class="tg-input" type="password" autocomplete="current-password" placeholder="Password">
+          <input id="password" class="tg-input" type="password" autocomplete="current-password" placeholder="Облачный пароль">
         </div>
-        <button id="btn-password" class="tg-btn" disabled>Continue</button>
+        <button id="btn-password" class="tg-btn" disabled>Далее</button>
       </div>
 
       <p id="auth-status" class="tg-status"></p>
       <p id="auth-error" class="tg-error"></p>
-      <p class="tg-foot">Сессия живёт только в памяти сервера. Войти можно только в свой аккаунт.</p>
+      <p class="tg-foot">Неофициальный клиент Telegram. Вводите данные только для собственного аккаунта.</p>
     </div>
   </div>
 
   <!-- ВЫБОР СТРАНЫ -->
   <div id="countries-modal" class="tg-modal hidden" role="dialog" aria-modal="true">
     <div class="tg-sheet">
-      <div class="tg-sheet-head"><b>Country</b><button id="btn-country-close" class="tg-link" type="button">Cancel</button></div>
-      <div class="tg-row"><input id="country-search" class="tg-input" placeholder="Search" autocomplete="off"></div>
+      <div class="tg-sheet-head"><b>Выберите страну</b><button id="btn-country-close" class="tg-link" type="button">Отмена</button></div>
+      <div class="tg-row"><input id="country-search" class="tg-input" placeholder="Поиск страны" autocomplete="off"></div>
       <div id="country-list" class="tg-country-list"></div>
     </div>
   </div>
